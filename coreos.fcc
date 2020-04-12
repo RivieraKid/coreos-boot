@@ -5,3 +5,16 @@ passwd:
     - name: core
       ssh_authorized_keys:
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGRgiSGMDxSpt2xKoDpMebXYrxtL87YwSnRk4o4uRn5WAnaMCAwn7JH/+kpvbwPgA8G2vATOo9elEMr0z3TZKawJ7cYtK+dV+fn0cJcz68xHYWfOXuLeRc83aJPsldNnStQ79fQTHBM2D1Z9u3wdbagz3ZsDDYlOtvLJL3RBR6aQGcjWxpqUNteDNof8Tu2BrJZZsw5RjuObFudfvWGzmtpeeGa47B3kWFrMOT4tv/I/o2lcPzCf17BYPMnbp7HgHzsERH3NlwMYf6gGr1EBaK3Xgo6FIAPgmmDg3gU3TKAAOtYIr17o7AzV3qo9E4tdgBefHahUS9m2bMPGKtTnmd dwood@dwarch
+systemd:
+  units:
+    - name: mnt-data.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Before=local-fs.target
+        [Mount]
+        What=/dev/media/media
+        Where=/mnt/data
+        Type=xfs
+        [Install]
+        WantedBy=local-fs.target
