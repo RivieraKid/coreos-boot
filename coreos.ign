@@ -22,6 +22,16 @@
       }
     ]
   },
-  "storage": {},
+  "storage": {
+    "filesystems": [
+      {
+        "device": "/dev/disk/by-label/coreos",
+        "format": "xfs",
+        "label": "coreos",
+        "path": "/sysroot",
+        "wipeFilesystem": true
+      }
+    ]
+  },
   "systemd": {}
 }
