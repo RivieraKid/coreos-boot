@@ -26,9 +26,9 @@
   "systemd": {
     "units": [
       {
-        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media/media\nWhere=/mnt/data\nType=xfs\n[Install]\nWantedBy=local-fs.target",
+        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media/media\nWhere=/var/mnt/data\nType=xfs\n[Install]\nWantedBy=local-fs.target",
         "enabled": true,
-        "name": "mnt-data.mount"
+        "name": "var-mnt-data.mount"
       }
     ]
   }
