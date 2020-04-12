@@ -61,7 +61,7 @@ systemd:
         ExecStartPre=-/bin/docker kill rancher
         ExecStartPre=-/bin/docker rm rancher
         ExecStartPre=-/bin/docker pull rancher/rancher
-        ExecStart=/bin/docker run --name rancher -p 80:80 -p 443:443
+        ExecStart=/bin/docker run --name rancher -p 80:80 -p 443:443 rancher/rancher
 
         ExecStop=/bin/docker stop rancher
 
