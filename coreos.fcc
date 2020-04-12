@@ -5,6 +5,11 @@ passwd:
     - name: core
       ssh_authorized_keys:
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGRgiSGMDxSpt2xKoDpMebXYrxtL87YwSnRk4o4uRn5WAnaMCAwn7JH/+kpvbwPgA8G2vATOo9elEMr0z3TZKawJ7cYtK+dV+fn0cJcz68xHYWfOXuLeRc83aJPsldNnStQ79fQTHBM2D1Z9u3wdbagz3ZsDDYlOtvLJL3RBR6aQGcjWxpqUNteDNof8Tu2BrJZZsw5RjuObFudfvWGzmtpeeGa47B3kWFrMOT4tv/I/o2lcPzCf17BYPMnbp7HgHzsERH3NlwMYf6gGr1EBaK3Xgo6FIAPgmmDg3gU3TKAAOtYIr17o7AzV3qo9E4tdgBefHahUS9m2bMPGKtTnmd dwood@dwarch
+    - name: dwood
+      ssh_authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGRgiSGMDxSpt2xKoDpMebXYrxtL87YwSnRk4o4uRn5WAnaMCAwn7JH/+kpvbwPgA8G2vATOo9elEMr0z3TZKawJ7cYtK+dV+fn0cJcz68xHYWfOXuLeRc83aJPsldNnStQ79fQTHBM2D1Z9u3wdbagz3ZsDDYlOtvLJL3RBR6aQGcjWxpqUNteDNof8Tu2BrJZZsw5RjuObFudfvWGzmtpeeGa47B3kWFrMOT4tv/I/o2lcPzCf17BYPMnbp7HgHzsERH3NlwMYf6gGr1EBaK3Xgo6FIAPgmmDg3gU3TKAAOtYIr17o7AzV3qo9E4tdgBefHahUS9m2bMPGKtTnmd dwood@dwarch
+      home_dir: /home/dwood/
+      groups: [ sudo, docker ]
 systemd:
   units:
     - name: var-mnt-data.mount
@@ -29,16 +34,36 @@ systemd:
 
         [Service]
         ExecStartPre=mkdir -p /var/lib/etcd
-        ExecStartPre=-/bin/podman kill etcd
-        ExecStartPre=-/bin/podman rm etcd
-        ExecStartPre=-/bin/podman pull quay.io/coreos/etcd
-        ExecStart=/bin/podman run --name etcd --volume /var/lib/etcd:/etcd-data:z --net=host quay.io/coreos/etcd:latest /usr/local/bin/etcd --data-dir /etcd-data --name node1 \
+        ExecStartPre=-/bin/docker kill etcd
+        ExecStartPre=-/bin/docker rm etcd
+        ExecStartPre=-/bin/docker pull quay.io/coreos/etcd
+        ExecStart=/bin/docker run --name etcd --volume /var/lib/etcd:/etcd-data:z --net=host quay.io/coreos/etcd:latest /usr/local/bin/etcd --data-dir /etcd-data --name node1 \
                 --initial-advertise-peer-urls http://127.0.0.1:2380 --listen-peer-urls http://127.0.0.1:2380 \
                 --advertise-client-urls http://127.0.0.1:2379 \
                 --listen-client-urls http://127.0.0.1:2379 \
                 --initial-cluster node1=http://127.0.0.1:2380
 
-        ExecStop=/bin/podman stop etcd
+        ExecStop=/bin/docker stop etcd
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: rancher.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Run single node rancher
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        ExecStartPre=mkdir -p /var/lib/rancher
+        ExecStartPre=-/bin/docker kill rancher
+        ExecStartPre=-/bin/docker rm rancher
+        ExecStartPre=-/bin/docker pull rancher/rancher
+        ExecStart=/bin/docker run --name rancher -p 80:80 -p 443:443
+
+        ExecStop=/bin/docker stop rancher
 
         [Install]
         WantedBy=multi-user.target

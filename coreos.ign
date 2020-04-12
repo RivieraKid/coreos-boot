@@ -19,6 +19,17 @@
         "sshAuthorizedKeys": [
           "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGRgiSGMDxSpt2xKoDpMebXYrxtL87YwSnRk4o4uRn5WAnaMCAwn7JH/+kpvbwPgA8G2vATOo9elEMr0z3TZKawJ7cYtK+dV+fn0cJcz68xHYWfOXuLeRc83aJPsldNnStQ79fQTHBM2D1Z9u3wdbagz3ZsDDYlOtvLJL3RBR6aQGcjWxpqUNteDNof8Tu2BrJZZsw5RjuObFudfvWGzmtpeeGa47B3kWFrMOT4tv/I/o2lcPzCf17BYPMnbp7HgHzsERH3NlwMYf6gGr1EBaK3Xgo6FIAPgmmDg3gU3TKAAOtYIr17o7AzV3qo9E4tdgBefHahUS9m2bMPGKtTnmd dwood@dwarch"
         ]
+      },
+      {
+        "groups": [
+          "sudo",
+          "docker"
+        ],
+        "homeDir": "/home/dwood/",
+        "name": "dwood",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGRgiSGMDxSpt2xKoDpMebXYrxtL87YwSnRk4o4uRn5WAnaMCAwn7JH/+kpvbwPgA8G2vATOo9elEMr0z3TZKawJ7cYtK+dV+fn0cJcz68xHYWfOXuLeRc83aJPsldNnStQ79fQTHBM2D1Z9u3wdbagz3ZsDDYlOtvLJL3RBR6aQGcjWxpqUNteDNof8Tu2BrJZZsw5RjuObFudfvWGzmtpeeGa47B3kWFrMOT4tv/I/o2lcPzCf17BYPMnbp7HgHzsERH3NlwMYf6gGr1EBaK3Xgo6FIAPgmmDg3gU3TKAAOtYIr17o7AzV3qo9E4tdgBefHahUS9m2bMPGKtTnmd dwood@dwarch"
+        ]
       }
     ]
   },
@@ -31,9 +42,14 @@
         "name": "var-mnt-data.mount"
       },
       {
-        "contents": "[Unit]\nDescription=Run single node etcd\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nExecStartPre=mkdir -p /var/lib/etcd\nExecStartPre=-/bin/podman kill etcd\nExecStartPre=-/bin/podman rm etcd\nExecStartPre=-/bin/podman pull quay.io/coreos/etcd\nExecStart=/bin/podman run --name etcd --volume /var/lib/etcd:/etcd-data:z --net=host quay.io/coreos/etcd:latest /usr/local/bin/etcd --data-dir /etcd-data --name node1 \\\n        --initial-advertise-peer-urls http://127.0.0.1:2380 --listen-peer-urls http://127.0.0.1:2380 \\\n        --advertise-client-urls http://127.0.0.1:2379 \\\n        --listen-client-urls http://127.0.0.1:2379 \\\n        --initial-cluster node1=http://127.0.0.1:2380\n\nExecStop=/bin/podman stop etcd\n\n[Install]\nWantedBy=multi-user.target",
+        "contents": "[Unit]\nDescription=Run single node etcd\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nExecStartPre=mkdir -p /var/lib/etcd\nExecStartPre=-/bin/docker kill etcd\nExecStartPre=-/bin/docker rm etcd\nExecStartPre=-/bin/docker pull quay.io/coreos/etcd\nExecStart=/bin/docker run --name etcd --volume /var/lib/etcd:/etcd-data:z --net=host quay.io/coreos/etcd:latest /usr/local/bin/etcd --data-dir /etcd-data --name node1 \\\n        --initial-advertise-peer-urls http://127.0.0.1:2380 --listen-peer-urls http://127.0.0.1:2380 \\\n        --advertise-client-urls http://127.0.0.1:2379 \\\n        --listen-client-urls http://127.0.0.1:2379 \\\n        --initial-cluster node1=http://127.0.0.1:2380\n\nExecStop=/bin/docker stop etcd\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "etcd-member.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Run single node rancher\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nExecStartPre=mkdir -p /var/lib/rancher\nExecStartPre=-/bin/docker kill rancher\nExecStartPre=-/bin/docker rm rancher\nExecStartPre=-/bin/docker pull rancher/rancher\nExecStart=/bin/docker run --name rancher -p 80:80 -p 443:443\n\nExecStop=/bin/docker stop rancher\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "rancher.service"
       }
     ]
   }
