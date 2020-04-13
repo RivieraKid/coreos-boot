@@ -51,7 +51,7 @@
   "systemd": {
     "units": [
       {
-        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media2/media2\nWhere=/var/mnt/data\nDirectoryMode=2775\nType=xfs\nOptions=ro\n[Install]\nWantedBy=local-fs.target\n",
+        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media2/media2\nWhere=/var/mnt/data\nDirectoryMode=2775\nType=xfs\n[Install]\nWantedBy=local-fs.target\n",
         "enabled": true,
         "name": "var-mnt-data.mount"
       },
