@@ -18,10 +18,37 @@ systemd:
         [Unit]
         Before=local-fs.target
         [Mount]
-        What=/dev/media/media
+        What=/dev/media2/media2
         Where=/var/mnt/data
         DirectoryMode=2775
         Type=xfs
+        Options=ro
+        [Install]
+        WantedBy=local-fs.target
+    - name: var-mnt-media.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Before=local-fs.target
+        [Mount]
+        What=/dev/media/media
+        Where=/var/mnt/media
+        DirectoryMode=2775
+        Type=xfs
+        Options=ro
+        [Install]
+        WantedBy=local-fs.target
+    - name: var-mnt-old.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Before=local-fs.target
+        [Mount]
+        What=/dev/xbmc/root
+        Where=/var/mnt/old
+        DirectoryMode=2775
+        Type=xfs
+        Options=ro
         [Install]
         WantedBy=local-fs.target
     - name: etcd-member.service
