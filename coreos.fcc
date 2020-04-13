@@ -113,7 +113,7 @@ systemd:
 
         [Service]
         ExecStartPre=-/bin/docker pull rivierakid/alpine-docker-compose
-        ExecStart=/bin/docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/data rivierakid/alpine-docker-compose
+        ExecStart=/bin/docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /:/data rivierakid/alpine-docker-compose version
 
         [Install]
         WantedBy=multi-user.target
