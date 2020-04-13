@@ -74,6 +74,11 @@
         "contents": "[Unit]\nDescription=Run single node rancher\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nExecStartPre=mkdir -p /var/lib/rancher\nExecStartPre=-/bin/docker kill rancher\nExecStartPre=-/bin/docker rm rancher\nExecStartPre=-/bin/docker pull rancher/rancher\nExecStart=/bin/docker run --name rancher -p 80:80 -p 443:443 rancher/rancher\n\nExecStop=/bin/docker stop rancher\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "rancher.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Pull image for docker-compose\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nExecStartPre=-/bin/docker pull rivierakid/alpine-docker-compose\nExecStart=/bin/docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/data rivierakid/alpine-docker-compose\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "docker-compose.service"
       }
     ]
   }

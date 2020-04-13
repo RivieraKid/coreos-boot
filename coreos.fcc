@@ -102,3 +102,18 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+
+    - name: docker-compose.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Pull image for docker-compose
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        ExecStartPre=-/bin/docker pull rivierakid/alpine-docker-compose
+        ExecStart=/bin/docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/data rivierakid/alpine-docker-compose
+
+        [Install]
+        WantedBy=multi-user.target
