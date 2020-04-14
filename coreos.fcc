@@ -7,6 +7,12 @@ storage:
       overwrite: true
       contents:
         inline: |
+          coreos
+    - path: /etc/hosts
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
           127.0.0.1   coreos coreos.localdomain
           192.168.1.206   coreos coreos.edjw.local
 passwd:

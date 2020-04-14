@@ -41,6 +41,17 @@
         "path": "/etc/hostname",
         "user": {},
         "contents": {
+          "source": "data:,coreos%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "group": {},
+        "overwrite": true,
+        "path": "/etc/hosts",
+        "user": {},
+        "contents": {
           "source": "data:,127.0.0.1%20%20%20coreos%20coreos.localdomain%0A192.168.1.206%20%20%20coreos%20coreos.edjw.local%0A",
           "verification": {}
         },
@@ -51,7 +62,7 @@
   "systemd": {
     "units": [
       {
-        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media2/media2\nWhere=/var/mnt/data\nDirectoryMode=2775\nType=xfs\n[Install]\nWantedBy=local-fs.target\n",
+        "contents": "[Unit]\nBefore=local-fs.target\n[Mount]\nWhat=/dev/media2/media2\nWhere=/var/mnt/data\nDirectoryMode=2775\nType=xfs\nOptions=ro\n[Install]\nWantedBy=local-fs.target\n",
         "enabled": true,
         "name": "var-mnt-data.mount"
       },
